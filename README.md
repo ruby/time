@@ -1,8 +1,19 @@
 # Time
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/time`. To experiment with that code, run `bin/console` for an interactive prompt.
+When 'time' is required, Time is extended with additional methods for parsing
+and converting Times.
 
-TODO: Delete this and the text above, and describe your gem
+## Features
+
+This library extends the Time class with the following conversions between
+date strings and Time objects:
+
+* date-time defined by {RFC 2822}[http://www.ietf.org/rfc/rfc2822.txt]
+* HTTP-date defined by {RFC 2616}[http://www.ietf.org/rfc/rfc2616.txt]
+* dateTime defined by XML Schema Part 2: Datatypes ({ISO
+  8601}[http://www.iso.org/iso/date_and_time_format])
+* various formats handled by Date._parse
+* custom formats handled by Date._strptime
 
 ## Installation
 
@@ -22,7 +33,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Takes a string representation of a Time and attempts to parse it
+using a heuristic.
+
+```ruby
+require 'time'
+
+Time.parse("2010-10-31") #=> 2010-10-31 00:00:00 -0500
+```
 
 ## Development
 
@@ -32,5 +50,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/hsbtime.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ruby/time.
 
