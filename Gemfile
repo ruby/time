@@ -5,3 +5,4 @@ gemspec
 
 gem "rake", "~> 12.0"
 gem "test-unit"
+gem "test-unit-ruby-core"
