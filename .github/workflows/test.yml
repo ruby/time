@@ -26,3 +26,16 @@ jobs:
         bundler-cache: true
     - name: Run test
       run: bundle exec rake test
+    - id: build
+      run: |
+        rake build
+        echo "pkg=${GITHUB_REPOSITORY#*/}-${RUNNING_OS%-*}" >> $GITHUB_OUTPUT
+      env:
+        RUNNING_OS: ${{matrix.os}}
+      if: needs.ruby-versions.outputs.latest == matrix.ruby
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        path: pkg/*
+        name: ${{steps.build.outputs.pkg}}
+      if: steps.build.outputs.pkg
