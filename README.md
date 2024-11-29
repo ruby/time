@@ -8,12 +8,15 @@ and converting Times.
 This library extends the Time class with the following conversions between
 date strings and Time objects:
 
-* date-time defined by {RFC 2822}[http://www.ietf.org/rfc/rfc2822.txt]
-* HTTP-date defined by {RFC 2616}[http://www.ietf.org/rfc/rfc2616.txt]
-* dateTime defined by XML Schema Part 2: Datatypes ({ISO
-  8601}[http://www.iso.org/iso/date_and_time_format])
+* date-time defined by [RFC 2822]
+* HTTP-date defined by [RFC 2616]
+* dateTime defined by XML Schema Part 2: Datatypes ([ISO 8601])
 * various formats handled by Date._parse
 * custom formats handled by Date._strptime
+
+[RFC 2822]: http://www.ietf.org/rfc/rfc2822.txt
+[RFC 2616]: http://www.ietf.org/rfc/rfc2616.txt
+[ISO 8601]: http://www.iso.org/iso/date_and_time_format
 
 ## Installation
 
@@ -51,4 +54,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ruby/time.
-
