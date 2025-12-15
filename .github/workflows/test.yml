@@ -34,7 +34,7 @@ jobs:
         RUNNING_OS: ${{matrix.os}}
       if: needs.ruby-versions.outputs.latest == matrix.ruby
     - name: Upload package
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         path: pkg/*
         name: ${{steps.build.outputs.pkg}}
