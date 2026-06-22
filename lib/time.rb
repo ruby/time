@@ -623,37 +623,53 @@ class Time
     #
     # You must require 'time' to use this method.
     #
-    def xmlschema(time)
-      if /\A\s*
-          (-?\d+)-(\d\d)-(\d\d)
-          T
-          (\d\d):(\d\d):(\d\d)
-          (\.\d+)?
-          (Z|[+-]\d\d(?::?\d\d)?)?
-          \s*\z/ix =~ time
-        year = $1.to_i
-        mon = $2.to_i
-        day = $3.to_i
-        hour = $4.to_i
-        min = $5.to_i
-        sec = $6.to_i
-        usec = 0
-        if $7
-          usec = Rational($7) * 1000000
-        end
-        if $8
-          zone = $8
-          off = zone_offset(zone)
-          year, mon, day, hour, min, sec =
-            apply_offset(year, mon, day, hour, min, sec, off)
-          t = self.utc(year, mon, day, hour, min, sec, usec)
-          force_zone!(t, zone, off)
-          t
+    if RUBY_VERSION >= "3.2"
+      def xmlschema(time)
+        if /\A\s*
+            (-?\d+)-(\d\d)-(\d\d)
+            T
+            (\d\d):(\d\d):(\d\d)
+            (\.\d+)?
+            (Z|[+-]\d\d(?::?\d\d)?)?
+            \s*\z/ix.match?(time)
+          new(time)
         else
-          self.local(year, mon, day, hour, min, sec, usec)
+          raise ArgumentError, "invalid xmlschema format: #{time.inspect}"
         end
-      else
-        raise ArgumentError.new("invalid xmlschema format: #{time.inspect}")
+      end
+    else
+      def xmlschema(time)
+        if /\A\s*
+            (-?\d+)-(\d\d)-(\d\d)
+            T
+            (\d\d):(\d\d):(\d\d)
+            (\.\d+)?
+            (Z|[+-]\d\d(?::?\d\d)?)?
+            \s*\z/ix =~ time
+          year = $1.to_i
+          mon = $2.to_i
+          day = $3.to_i
+          hour = $4.to_i
+          min = $5.to_i
+          sec = $6.to_i
+          usec = 0
+          if $7
+            usec = Rational($7) * 1000000
+          end
+          if $8
+            zone = $8
+            off = zone_offset(zone)
+            year, mon, day, hour, min, sec =
+              apply_offset(year, mon, day, hour, min, sec, off)
+            t = self.utc(year, mon, day, hour, min, sec, usec)
+            force_zone!(t, zone, off)
+            t
+          else
+            self.local(year, mon, day, hour, min, sec, usec)
+          end
+        else
+          raise ArgumentError.new("invalid xmlschema format: #{time.inspect}")
+        end
       end
     end
     alias iso8601 xmlschema
