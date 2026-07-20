@@ -6,4 +6,5 @@ group :development do
   gem "rake", "~> 13.2"
   gem "test-unit"
   gem "test-unit-ruby-core", ">= 1.0.7"
+  gem "rdoc", ">= 6.3"
 end
