@@ -266,6 +266,19 @@ class TestTimeExtension < Test::Unit::TestCase # :nodoc:
     assert_equal(t, Time.__send__(method, s))
   end
 
+  def test_zone_offset
+    assert_equal(9 * 3600, Time.zone_offset("+09:00"))
+    assert_equal(9 * 3600, Time.zone_offset("+09"))
+    assert_equal(9 * 3600, Time.zone_offset("GMT+0900"))
+    assert_equal(9 * 3600, Time.zone_offset("gmt+09:00"))
+    assert_equal(9 * 3600, Time.zone_offset("UTC+09"))
+    assert_equal(-(5 * 3600 + 30 * 60), Time.zone_offset("GMT-05:30"))
+    assert_equal(-(5 * 3600 + 30 * 60), Time.zone_offset("UTC-0530"))
+    assert_equal(0, Time.zone_offset("GMT"))
+    assert_nil(Time.zone_offset("GMT+"))
+    assert_nil(Time.zone_offset("GMT+9:00"))
+  end
+
   def test_completion
     now = Time.local(2001,11,29,21,26,35)
     assert_equal(Time.local( 2001,11,29,21,12),
@@ -389,6 +402,17 @@ class TestTimeExtension < Test::Unit::TestCase # :nodoc:
     assert_equal(t, Time.parse("1200-02-15 BC 14:13:20-00"))
     assert_equal(t, Time.parse("1200-02-15 BC 14:13:20-00:00"))
     assert_equal(t, Time.parse("1200-02-15 BC 14:13:20-00:00:00"))
+  end
+
+  def test_parse_gmt_utc_prefixed_offset
+    t = Time.utc(2026, 10, 10, 1, 47, 0)
+    # JavaScript's Date#toString format
+    assert_equal(t, Time.parse("Sat Oct 10 2026 10:47:00 GMT+0900 (Japan Standard Time)"))
+    assert_equal(9 * 3600, Time.parse("Sat Oct 10 2026 10:47:00 GMT+0900").utc_offset)
+    assert_equal(t, Time.parse("Fri Oct 09 2026 20:17:00 GMT-0530"))
+    assert_equal(t, Time.parse("2026-10-10 10:47:00 UTC+09:00"))
+    assert_equal(t, Time.parse("2026-10-10 10:47:00 UTC+09"))
+    assert_equal(t, Time.strptime("2026-10-10 10:47:00 GMT+0900", "%Y-%m-%d %H:%M:%S %Z"))
   end
 
   def test_parse_custom_offset
