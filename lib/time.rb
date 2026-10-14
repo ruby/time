@@ -61,7 +61,9 @@ class Time
     # Numeric time zones that include minutes, such as
     # <code>-10:00</code> or <code>+1330</code> will work, as will
     # simpler hour-only time zones like <code>-10</code> or
-    # <code>+13</code>.
+    # <code>+13</code>. These numeric time zones may also be prefixed
+    # with +GMT+ or +UTC+, such as <code>GMT+0900</code> or
+    # <code>UTC-05:30</code>.
     #
     # Textual time zones listed in ZoneOffset are also supported.
     #
@@ -83,10 +85,10 @@ class Time
     def zone_offset(zone, year=nil)
       off = nil
       zone = zone.upcase
-      if /\A([+-])(\d\d)(:?)(\d\d)(?:\3(\d\d))?\z/ =~ zone
+      if /\A(?:GMT|UTC)?([+-])(\d\d)(:?)(\d\d)(?:\3(\d\d))?\z/ =~ zone
         off = ($1 == '-' ? -1 : 1) * (($2.to_i * 60 + $4.to_i) * 60 + $5.to_i)
-      elsif zone.match?(/\A[+-]\d\d\z/)
-        off = zone.to_i * 3600
+      elsif /\A(?:GMT|UTC)?([+-]\d\d)\z/ =~ zone
+        off = $1.to_i * 3600
       elsif ZoneOffset.include?(zone)
         off = ZoneOffset[zone] * 3600
       else
