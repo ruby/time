@@ -587,6 +587,14 @@ class TestTimeExtension < Test::Unit::TestCase # :nodoc:
     assert_equal(Time.local(2015, 12, 28), Time.strptime("53 15", "%V %g"))
   end
 
+  def test_strptime_wuvg_with_time
+    assert_equal(Time.local(2019, 1, 1, 10, 30, 15), Time.strptime("2019-W01-2 10:30:15", "%G-W%V-%u %H:%M:%S"))
+    assert_equal(Time.local(2019, 2, 7, 12, 34), Time.strptime("4 5 2019 12:34", "%u %U %Y %H:%M"))
+    t = Time.strptime("2004-W53-7 12:00:00.5 +0900", "%G-W%V-%u %H:%M:%S.%N %z")
+    assert_equal(Time.new(2005, 1, 2, 12, 0, 1/2r, "+09:00"), t)
+    assert_equal(9 * 3600, t.utc_offset)
+  end
+
   def test_nsec
     assert_equal(123456789, Time.parse("2000-01-01T00:00:00.123456789+00:00").tv_nsec)
   end

@@ -482,7 +482,9 @@ class Time
         yday = d[:yday]
         if (d[:cwyear] && !year) || ((d[:cwday] || d[:cweek]) && !(d[:mon] && d[:mday]))
           # make_time doesn't deal with cwyear/cwday/cweek
-          return Date.strptime(date, format).to_time
+          d2 = Date.strptime(date, format)
+          year = d2.year
+          yday = d2.yday
         end
         if (d[:wnum0] || d[:wnum1]) && !yday && !(d[:mon] && d[:mday])
           yday = Date.strptime(date, format).yday
