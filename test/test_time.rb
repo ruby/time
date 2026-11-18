@@ -62,6 +62,24 @@ class TestTimeExtension < Test::Unit::TestCase # :nodoc:
     assert_equal(true, t.utc?)
   end
 
+  def test_rfc2822_zone_end
+    t = Time.rfc2822("Sat, 01 Jan 2000 12:00:00 UTC")
+    assert_equal(Time.utc(2000, 1, 1, 12, 0, 0), t)
+    assert_equal(true, t.utc?)
+    t = Time.rfc2822("Sat, 01 Jan 2000 12:00:00 GMT(comment)")
+    assert_equal(Time.utc(2000, 1, 1, 12, 0, 0), t)
+    t = Time.rfc2822("Sat, 01 Jan 2000 12:00:00 Z")
+    assert_equal(Time.utc(2000, 1, 1, 12, 0, 0), t)
+
+    # A longer zone name is not a military zone with extra letters.
+    %w[CET CEST HST IST BST MSK EET UTX GMTX ESTX].each do |zone|
+      assert_raise(ArgumentError, zone) {
+        Time.rfc2822("Sat, 01 Jan 2000 12:00:00 #{zone}")
+      }
+    end
+    assert_raise(ArgumentError) { Time.rfc2822("Sat, 01 Jan 2000 12:00:00 +09001") }
+  end
+
   def test_rfc2822_nonlinear
     pre = ->(n) {"0 Feb 00 00 :00" + " " * n}
     assert_linear_performance([100, 500, 5000, 50_000], pre: pre) do |s|
