@@ -213,14 +213,17 @@ class Time
         unless (1..366) === yday
           raise ArgumentError, "yday #{yday} out of range"
         end
-        mon, day = (yday-1).divmod(31)
-        mon += 1
-        day += 1
-        t = make_time(date, year, nil, mon, day, hour, min, sec, sec_fraction, zone, now)
-        diff = yday - t.yday
-        return t if diff.zero?
-        day += diff
-        if day > 28 and day > (mday = month_days(off_year, mon))
+        # Find the month and day directly. A guessed date like Feb 31
+        # isn't valid, and apply_offset can move it to the wrong day.
+        unless year
+          if now and now.respond_to?(:getlocal)
+            year = (off ? now.getlocal(off) : now.getlocal).year
+          else
+            year = now ? now.year : 1970
+          end
+        end
+        mon, day = 1, yday
+        while day > (mday = month_days(year, mon))
           if (mon += 1) > 12
             raise ArgumentError, "yday #{yday} out of range"
           end

@@ -557,6 +557,19 @@ class TestTimeExtension < Test::Unit::TestCase # :nodoc:
     assert_equal(1, t.day)
   end
 
+  def test_strptime_j_with_offset
+    t = Time.strptime("1985-062 14:58:14 -1130", "%Y-%j %H:%M:%S %z")
+    assert_equal(Time.new(1985, 3, 3, 14, 58, 14, "-11:30"), t)
+    assert_equal(-41400, t.utc_offset)
+    t = Time.strptime("2030-060 20:18:28 -0345", "%Y-%j %H:%M:%S %z")
+    assert_equal(Time.new(2030, 3, 1, 20, 18, 28, "-03:45"), t)
+    t = Time.strptime("2024-366 23:00:00 -1200", "%Y-%j %H:%M:%S %z")
+    assert_equal(Time.new(2024, 12, 31, 23, 0, 0, "-12:00"), t)
+    t = Time.strptime("2023-001 00:30:00 +1400", "%Y-%j %H:%M:%S %z")
+    assert_equal(Time.new(2023, 1, 1, 0, 30, 0, "+14:00"), t)
+    assert_raise(ArgumentError) { Time.strptime("2023-366", "%Y-%j") }
+  end
+
   def test_strptime_p
     t = Time.strptime("3am", "%I%p")
     assert_equal(3, t.hour)
