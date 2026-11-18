@@ -524,8 +524,7 @@ class Time
           :\s*(\d{2})
           (?:\s*:\s*(\d\d))?\s+
           ([+-]\d{4}|
-           UTC|UT|GMT|EST|EDT|CST|CDT|MST|MDT|PST|PDT|[A-IK-Z])
-          (?![a-z\d])/ix =~ date
+           UTC|UT|GMT|EST|EDT|CST|CDT|MST|MDT|PST|PDT|[A-IK-Z])\b/ix =~ date
         # Since RFC 2822 permit comments, the regexp has no right anchor.
         # The zone must still end there, so that "CET" is not read as the
         # military zone "C".
