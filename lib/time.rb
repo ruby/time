@@ -524,8 +524,11 @@ class Time
           :\s*(\d{2})
           (?:\s*:\s*(\d\d))?\s+
           ([+-]\d{4}|
-           UT|GMT|EST|EDT|CST|CDT|MST|MDT|PST|PDT|[A-IK-Z])/ix =~ date
+           UTC|UT|GMT|EST|EDT|CST|CDT|MST|MDT|PST|PDT|[A-IK-Z])
+          (?![a-z\d])/ix =~ date
         # Since RFC 2822 permit comments, the regexp has no right anchor.
+        # The zone must still end there, so that "CET" is not read as the
+        # military zone "C".
         day = $1.to_i
         mon = MonthValue[$2.upcase]
         year = $3.to_i
